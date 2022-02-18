@@ -52,10 +52,7 @@ Website Carbon SVG Badge:
     # Based on https://stackoverflow.com/a/66158943/28726
     # -------------------------------------------
     - ENCODED_URL=$(echo -n $URL | node -p 'encodeURIComponent(require("fs").readFileSync(0)).replace(/https?%3A%2F%2F/gi,"")')
-    - echo -e "Generating \e[95m$CI_JOB_NAME\e[0m"
-    - echo -e "page  - \e[95m$ENCODED_URL\e[0m"
-    - echo -e "color - \e[95m$COLOR\e[0m"
-    - echo -e "file  - \e[95m$FILENAME\e[0m"
+    - echo -e "Generating \e[95m$FILENAME.svg\e[0m for \e[95m$ENCODED_URL\e[0m in \e[95m$COLOR\e[0m"
     # ===========================================
     # GIT:
     # -------------------------------------------
