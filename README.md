@@ -39,7 +39,7 @@ The [.gitlab-ci.yml](https://gitlab.com/davidhund/svg-carbonbadge-ci/-/blob/mast
 :sparkles: As a matter of eating ones own dog-food: the *example* `.gitlab-ci.yml` file in this repo does run periodically and update the badge for [this repo's Pages website](https://davidhund.gitlab.io/svg-carbonbadge-ci)! :sparkles:
 
 ---
-![svg-carbon-badge](https://gitlab.com/davidhund/svg-carbonbadge-ci/-/raw/main/src/website-carbon-badge.svg)
+![svg-carbon-badge](https://gitlab.com/davidhund/svg-carbonbadge-ci/-/raw/main/website-carbon-badge.svg)
 ---
 
 ## 🤖 Automatically re-generate your badge
