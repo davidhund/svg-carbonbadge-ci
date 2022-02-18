@@ -1,0 +1,120 @@
+# -----------------------------------------------
+# VARIABLES:
+# Override from CI Environment Vars!
+# -----------------------------------------------
+# URL:      Does not need `http[s]://`
+# COLOR:    Should be hex and 6-digit, NO '#'!
+# FILENAME: NO `.svg`. Could be: `folder/sub/filename`
+# -----------------------------------------------
+variables:
+  URL: "https://svg-carbonbadge.netlify.app"
+  COLOR: "669900"
+  FILENAME: "website-carbon-badge"
+  API: "svg-carbonbadge.netlify.app/.netlify/functions/badge"
+  COMMIT_MESSAGE: "[carbonbadge ci] Updated Carbon Badge"
+
+# -----------------------------------------------
+# IMAGE:
+# Using node, but not necessary (do change urlencode)
+# -----------------------------------------------
+image: node:latest
+
+# -----------------------------------------------
+# STAGES:
+# -----------------------------------------------
+stages:
+  - build
+
+# -----------------------------------------------
+# JOB: Website Carbon SVG Badge
+# -----------------------------------------------
+Website Carbon SVG Badge:
+  stage: build
+
+  only:
+    # SCHEDULED FOR NOW: COULD BE ANYTHING!
+    - schedules
+
+  # You can download your badge from the
+  # Gitlab UI > Artifacts
+  artifacts:
+    name: "$CI_JOB_NAME"
+    expire_in: 1 day
+    expose_as: "Website Carbon SVG Badge"
+    paths: ['$FILENAME.svg']
+
+  before_script:
+    # ===========================================
+    # NODEJS:
+    # We URL-ENCODE URL through NodeJS
+    # Because we run in a node image
+    # In different image this could be Python, PHP, Perl, etc
+    # Based on https://stackoverflow.com/a/66158943/28726
+    # -------------------------------------------
+    - ENCODED_URL=$(echo -n $URL | node -p 'encodeURIComponent(require("fs").readFileSync(0)).replace(/https?%3A%2F%2F/gi,"")')
+    - echo -e "Generating \e[95m$CI_JOB_NAME\e[0m"
+    - echo -e "page  - \e[95m$ENCODED_URL\e[0m"
+    - echo -e "color - \e[95m$COLOR\e[0m"
+    - echo -e "file  - \e[95m$FILENAME\e[0m"
+    # ===========================================
+    # GIT:
+    # -------------------------------------------
+    - git config --global user.name "${GIT_USER_EMAIL:-$GITLAB_USER_EMAIL}"
+    - git config --global user.email "${GIT_USER_NAME:-$GITLAB_USER_NAME}"
+    # -------------------------------------------
+    # Git in CI works in `detached HEAD`
+    # Attach to current branch
+    # -------------------------------------------
+    - git checkout $CI_COMMIT_REF_NAME --quiet
+
+  script:
+    # ===========================================
+    # SCRIPT:
+    # Using curl, but could be done n external ci.js
+    # or ci.sh etc. Using bash-only for now...
+    # -------------------------------------------
+    # ===========================================
+    # CURL: Write API response to file
+    # -------------------------------------------
+    - 'curl -s $API/$ENCODED_URL/$COLOR/svg -H "Accept: image/svg+xml" > $FILENAME.svg'
+
+  after_script:
+    # ===========================================
+    # GIT: Commit changes
+    # -------------------------------------------
+    - git add -A
+    - timestamp=$(date -u)
+    - git commit -m "$COMMIT_MESSAGE ${timestamp}"
+    # ===========================================
+    # GIT: GitLab CI runner cannot `push`!
+    # Personal Access Token needed!
+    # https://gitlab.com/-/profile/personal_access_tokens
+    # -----------------------------------------------
+    # REMOVE: `-o skip-ci` if you want next pipelines to continue from here...
+    - git push "https://${GITLAB_USER_NAME}:${CI_PERSONAL_ACCESS_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_COMMIT_REF_NAME}" -o skip-ci
+    # ===========================================
+    # DONE
+    # -------------------------------------------
+    - echo -e "\e[95m$CI_JOB_NAME\e[0m done"
+    - echo "Prefer manual creation? Try the app!"
+    - echo -e "\e[95mhttps://svg-carbonbadge.netlify.app/\e[0m"
+
+# -----------------------------------------------
+# JOB: `pages` DEMO-SITE
+# YOU CAN IGNORE/REMOVE THIS
+# It's only used for this repo's demo-site
+# -----------------------------------------------
+pages:
+  stage: build
+  only:
+    - schedules
+  script:
+    - npx -y github-readme-to-html -t "SVG-CarbonBage CI"
+  after_script:
+    - rm -rf public
+    - mv dist public
+    - cp website-carbon-badge.svg public/
+  artifacts:
+    paths:
+      - public
+
