@@ -34,9 +34,9 @@ Glad you asked! Yes: we would not want to show outdated data. And manually re-ge
 
 Using GitLab CI or GitHub Actions (WIP) you can *update your svg badge when your website is built*. You can also update the badge *periodically* with "Scheduled Pipeline Jobs"
 
-The [.gitlab-ci.yml](https://gitlab.com/davidhund/svg-carbonbadge-ci/-/blob/master/.gitlab-ci.yml) in this repository gives you an example of how to do this.
+The [.gitlab-ci.yml](https://gitlab.com/davidhund/svg-carbonbadge-ci/-/blob/master/.gitlab-ci.yml) and [.github/workflows](https://github.com/davidhund/svg-carbonbadge-ci/) in this repository give you examples of how to do this.
 
-:sparkles: As a matter of eating ones own dog-food: the *example* `.gitlab-ci.yml` file in this repo does run periodically and update the badge for [this repo's Pages website](https://davidhund.gitlab.io/svg-carbonbadge-ci)! :sparkles:
+:sparkles: As a matter of eating ones own dog-food: the *example* `.gitlab-ci.yml` file in this repo does run periodically and update the badge for [this repo's GitLab Pages website](https://davidhund.gitlab.io/svg-carbonbadge-ci)! :sparkles: ([GitHub Pages](https://davidhund.github.io/svg-carbonbadge-ci/))
 
 ---
 ![svg-carbon-badge](https://gitlab.com/davidhund/svg-carbonbadge-ci/-/raw/main/website-carbon-badge.svg)

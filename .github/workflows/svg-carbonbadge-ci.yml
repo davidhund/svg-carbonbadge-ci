@@ -1,0 +1,60 @@
+name: website-carbon-svg-badge
+# EXAMPLES
+# (re)generate SVG badge on:
+# - Schedule: e.g. 'Every monday 8:50'
+# - Push to `main` branch
+# - PR to `main` branch
+# - etc...
+on:
+  schedule:
+    - cron: '50 8 * * 1'
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types:
+      - opened
+    branches:    
+      - 'main'
+jobs:
+  generate-website-carbon-svg-badge:
+    # ENV DEFAULTS
+    env:
+      URL: "https://svg-carbonbadge.netlify.app"
+      COLOR: "669900"
+      FILENAME: "website-carbon-badge"
+      API: "svg-carbonbadge.netlify.app/.netlify/functions/badge"
+      COMMIT_MESSAGE: "[carbonbadge ci] Updated Carbon Badge"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Generate Badge
+      # ===========================================
+      # NODEJS:
+      # We URL-ENCODE URL through NodeJS
+      # Because we run in a node image
+      # In different image this could be Python, PHP, Perl, etc
+      # Based on https://stackoverflow.com/a/66158943/28726
+      # -------------------------------------------
+      - run: ENCODED_URL=$(echo -n $URL | node -p 'encodeURIComponent(require("fs").readFileSync(0)).replace(/https?%3A%2F%2F/gi,"")')
+      - run: echo -e "Generating \e[95m$FILENAME.svg\e[0m for \e[95m$ENCODED_URL\e[0m in \e[95m$COLOR\e[0m"
+      # ===========================================
+      # SCRIPT:
+      # Using curl, but could be done n external ci.js
+      # or ci.sh etc. Using bash-only for now...
+      # -------------------------------------------
+      # ===========================================
+      # CURL: Write API response to file
+      # -------------------------------------------
+      - run: 'curl -s $API/$ENCODED_URL/$COLOR/svg -H "Accept: image/svg+xml" > $FILENAME.svg'
+      - name: Archive badge
+        uses: actions/upload-artifact@v2
+        with:
+          name: 'SVG-Badge'
+          path: '$FILENAME.svg'
+          retention-days: 7
