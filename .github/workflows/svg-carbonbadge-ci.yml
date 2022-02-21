@@ -11,15 +11,16 @@ on:
   push:
     branches:
       - 'main'
+    # UPDATE FILENAME!
     paths-ignore:
-      - ${{ FILENAME }}.svg
+      - 'website-carbon-badge.svg'
   pull_request:
     types:
       - opened
     branches:    
       - 'main'
     paths-ignore:
-      - ${{ FILENAME }}.svg
+      - 'website-carbon-badge.svg'
 jobs:
   generate-website-carbon-svg-badge:
     # ENV DEFAULTS
