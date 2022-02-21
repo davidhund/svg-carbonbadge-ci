@@ -71,6 +71,7 @@ When your Pipeline gets triggered (manual, through a Schedule or Merge request),
 
 For Jamstack sites, this push often rebuilds the website and e.g. deploys it to e.g. Netlify etc. The result is that your badge is updated automatically
 
-### (TODO) GitHub Actions
+### GitHub Actions
 
-- ...
+- Look at `.github/workflows/svg-carbonbadge-ci.yml` for an example of a GitHub Action workflow!
+- Page at [davidhund.github.io/svg-carbonbadge-ci/](https://davidhund.github.io/svg-carbonbadge-ci/)
