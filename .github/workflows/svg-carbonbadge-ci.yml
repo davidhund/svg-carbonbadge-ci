@@ -11,11 +11,15 @@ on:
   push:
     branches:
       - 'main'
+      paths-ignore:
+        - ${{ FILENAME }}.svg
   pull_request:
     types:
       - opened
     branches:    
       - 'main'
+      paths-ignore:
+        - ${{ FILENAME }}.svg
 jobs:
   generate-website-carbon-svg-badge:
     # ENV DEFAULTS
@@ -35,6 +39,8 @@ jobs:
           node-version: '14'
       - name: Generate Badge
         run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
           # ===========================================
           # NODEJS:
           # We URL-ENCODE URL through NodeJS
@@ -53,9 +59,13 @@ jobs:
           # CURL: Write API response to file
           # -------------------------------------------
           curl -s $API/$ENCODED_URL/$COLOR/svg -H "Accept: image/svg+xml" > $FILENAME.svg
+          # Stage, commit and push the new badge
+          git add -A
+          timestamp=$(date -u)
+          git commit -m "$COMMIT_MESSAGE ${timestamp}"
       - name: Archive badge
         uses: actions/upload-artifact@v2
         with:
           name: 'SVG-Badge'
-          path: '$FILENAME.svg'
+          path: ${{ env.FILENAME }}.svg
           retention-days: 7
