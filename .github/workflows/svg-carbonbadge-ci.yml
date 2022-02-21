@@ -52,7 +52,7 @@ jobs:
           # ===========================================
           # CURL: Write API response to file
           # -------------------------------------------
-          'curl -s $API/$ENCODED_URL/$COLOR/svg -H "Accept: image/svg+xml" > $FILENAME.svg'
+          curl -s $API/$ENCODED_URL/$COLOR/svg -H "Accept: image/svg+xml" > $FILENAME.svg
       - name: Archive badge
         uses: actions/upload-artifact@v2
         with:
