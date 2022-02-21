@@ -34,24 +34,25 @@ jobs:
         with:
           node-version: '14'
       - name: Generate Badge
-      # ===========================================
-      # NODEJS:
-      # We URL-ENCODE URL through NodeJS
-      # Because we run in a node image
-      # In different image this could be Python, PHP, Perl, etc
-      # Based on https://stackoverflow.com/a/66158943/28726
-      # -------------------------------------------
-      - run: ENCODED_URL=$(echo -n $URL | node -p 'encodeURIComponent(require("fs").readFileSync(0)).replace(/https?%3A%2F%2F/gi,"")')
-      - run: echo -e "Generating \e[95m$FILENAME.svg\e[0m for \e[95m$ENCODED_URL\e[0m in \e[95m$COLOR\e[0m"
-      # ===========================================
-      # SCRIPT:
-      # Using curl, but could be done n external ci.js
-      # or ci.sh etc. Using bash-only for now...
-      # -------------------------------------------
-      # ===========================================
-      # CURL: Write API response to file
-      # -------------------------------------------
-      - run: 'curl -s $API/$ENCODED_URL/$COLOR/svg -H "Accept: image/svg+xml" > $FILENAME.svg'
+        run: |
+          # ===========================================
+          # NODEJS:
+          # We URL-ENCODE URL through NodeJS
+          # Because we run in a node image
+          # In different image this could be Python, PHP, Perl, etc
+          # Based on https://stackoverflow.com/a/66158943/28726
+          # -------------------------------------------
+          ENCODED_URL=$(echo -n $URL | node -p 'encodeURIComponent(require("fs").readFileSync(0)).replace(/https?%3A%2F%2F/gi,"")')
+          echo -e "Generating \e[95m$FILENAME.svg\e[0m for \e[95m$ENCODED_URL\e[0m in \e[95m$COLOR\e[0m"
+          # ===========================================
+          # SCRIPT:
+          # Using curl, but could be done n external ci.js
+          # or ci.sh etc. Using bash-only for now...
+          # -------------------------------------------
+          # ===========================================
+          # CURL: Write API response to file
+          # -------------------------------------------
+          'curl -s $API/$ENCODED_URL/$COLOR/svg -H "Accept: image/svg+xml" > $FILENAME.svg'
       - name: Archive badge
         uses: actions/upload-artifact@v2
         with:
