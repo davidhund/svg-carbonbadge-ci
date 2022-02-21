@@ -12,14 +12,14 @@ on:
     branches:
       - 'main'
     paths-ignore:
-      - ${{ jobs.generate-website-carbon-svg-badge.env.FILENAME }}.svg
+      - ${{ env.FILENAME }}.svg
   pull_request:
     types:
       - opened
     branches:    
       - 'main'
     paths-ignore:
-      - ${{ jobs.generate-website-carbon-svg-badge.env.FILENAME }}.svg
+      - ${{ env.FILENAME }}.svg
 jobs:
   generate-website-carbon-svg-badge:
     # ENV DEFAULTS
